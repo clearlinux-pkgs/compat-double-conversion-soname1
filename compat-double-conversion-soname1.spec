@@ -4,7 +4,7 @@
 #
 Name     : compat-double-conversion-soname1
 Version  : 3.1.1
-Release  : 24
+Release  : 25
 URL      : https://github.com/google/double-conversion/archive/v3.1.1.tar.gz
 Source0  : https://github.com/google/double-conversion/archive/v3.1.1.tar.gz
 Summary  : No detailed summary available
@@ -21,17 +21,6 @@ Patch2: 0002-Use-GNUInstallDirs-to-install-files-in-the-expected-.patch
 https://github.com/google/double-conversion
 This project (double-conversion) provides binary-decimal and decimal-binary
 routines for IEEE doubles.
-
-%package dev
-Summary: dev components for the compat-double-conversion-soname1 package.
-Group: Development
-Requires: compat-double-conversion-soname1-lib = %{version}-%{release}
-Provides: compat-double-conversion-soname1-devel = %{version}-%{release}
-Requires: compat-double-conversion-soname1 = %{version}-%{release}
-
-%description dev
-dev components for the compat-double-conversion-soname1 package.
-
 
 %package lib
 Summary: lib components for the compat-double-conversion-soname1 package.
@@ -59,27 +48,28 @@ license components for the compat-double-conversion-soname1 package.
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1557077133
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1564677061
 mkdir -p clr-build
 pushd clr-build
+export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$CFLAGS -fno-lto "
 export FFLAGS="$CFLAGS -fno-lto "
 export CXXFLAGS="$CXXFLAGS -fno-lto "
 %cmake .. -DBUILD_SHARED_LIBS:BOOL=ON -DINSTALL_LIB_DIR=/usr/lib64
-make  %{?_smp_mflags}
+make  %{?_smp_mflags} VERBOSE=1
 popd
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 cd clr-build; make test || :
 
 %install
-export SOURCE_DATE_EPOCH=1557077133
+export SOURCE_DATE_EPOCH=1564677061
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/compat-double-conversion-soname1
 cp COPYING %{buildroot}/usr/share/package-licenses/compat-double-conversion-soname1/COPYING
@@ -87,26 +77,24 @@ cp LICENSE %{buildroot}/usr/share/package-licenses/compat-double-conversion-sona
 pushd clr-build
 %make_install
 popd
+## Remove excluded files
+rm -f %{buildroot}/usr/include/double-conversion/bignum.h
+rm -f %{buildroot}/usr/include/double-conversion/cached-powers.h
+rm -f %{buildroot}/usr/include/double-conversion/diy-fp.h
+rm -f %{buildroot}/usr/include/double-conversion/double-conversion.h
+rm -f %{buildroot}/usr/include/double-conversion/fast-dtoa.h
+rm -f %{buildroot}/usr/include/double-conversion/fixed-dtoa.h
+rm -f %{buildroot}/usr/include/double-conversion/ieee.h
+rm -f %{buildroot}/usr/include/double-conversion/strtod.h
+rm -f %{buildroot}/usr/include/double-conversion/utils.h
+rm -f %{buildroot}/usr/lib64/cmake/double-conversion/double-conversionConfig.cmake
+rm -f %{buildroot}/usr/lib64/cmake/double-conversion/double-conversionConfigVersion.cmake
+rm -f %{buildroot}/usr/lib64/cmake/double-conversion/double-conversionTargets-relwithdebinfo.cmake
+rm -f %{buildroot}/usr/lib64/cmake/double-conversion/double-conversionTargets.cmake
+rm -f %{buildroot}/usr/lib64/libdouble-conversion.so
 
 %files
 %defattr(-,root,root,-)
-
-%files dev
-%defattr(-,root,root,-)
-%exclude /usr/include/double-conversion/bignum.h
-%exclude /usr/include/double-conversion/cached-powers.h
-%exclude /usr/include/double-conversion/diy-fp.h
-%exclude /usr/include/double-conversion/double-conversion.h
-%exclude /usr/include/double-conversion/fast-dtoa.h
-%exclude /usr/include/double-conversion/fixed-dtoa.h
-%exclude /usr/include/double-conversion/ieee.h
-%exclude /usr/include/double-conversion/strtod.h
-%exclude /usr/include/double-conversion/utils.h
-%exclude /usr/lib64/cmake/double-conversion/double-conversionConfig.cmake
-%exclude /usr/lib64/cmake/double-conversion/double-conversionConfigVersion.cmake
-%exclude /usr/lib64/cmake/double-conversion/double-conversionTargets-relwithdebinfo.cmake
-%exclude /usr/lib64/cmake/double-conversion/double-conversionTargets.cmake
-%exclude /usr/lib64/libdouble-conversion.so
 
 %files lib
 %defattr(-,root,root,-)
@@ -115,5 +103,5 @@ popd
 
 %files license
 %defattr(0644,root,root,0755)
-%exclude /usr/share/package-licenses/compat-double-conversion-soname1/COPYING
-%exclude /usr/share/package-licenses/compat-double-conversion-soname1/LICENSE
+/usr/share/package-licenses/compat-double-conversion-soname1/COPYING
+/usr/share/package-licenses/compat-double-conversion-soname1/LICENSE

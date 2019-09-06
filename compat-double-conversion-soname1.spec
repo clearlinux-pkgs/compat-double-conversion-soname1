@@ -4,7 +4,7 @@
 #
 Name     : compat-double-conversion-soname1
 Version  : 3.1.1
-Release  : 25
+Release  : 26
 URL      : https://github.com/google/double-conversion/archive/v3.1.1.tar.gz
 Source0  : https://github.com/google/double-conversion/archive/v3.1.1.tar.gz
 Summary  : No detailed summary available
@@ -14,6 +14,8 @@ Requires: compat-double-conversion-soname1-lib = %{version}-%{release}
 Requires: compat-double-conversion-soname1-license = %{version}-%{release}
 BuildRequires : buildreq-cmake
 BuildRequires : buildreq-scons
+# Suppress generation of debuginfo
+%global debug_package %{nil}
 Patch1: 0001-Change-CMake-build-to-use-the-same-SONAME-as-the-Sco.patch
 Patch2: 0002-Use-GNUInstallDirs-to-install-files-in-the-expected-.patch
 
@@ -49,7 +51,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1564677061
+export SOURCE_DATE_EPOCH=1567808038
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -69,7 +71,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 cd clr-build; make test || :
 
 %install
-export SOURCE_DATE_EPOCH=1564677061
+export SOURCE_DATE_EPOCH=1567808038
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/compat-double-conversion-soname1
 cp COPYING %{buildroot}/usr/share/package-licenses/compat-double-conversion-soname1/COPYING
